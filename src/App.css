@@ -111,6 +111,24 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
+/* Image Preview Overlay */
+.image-preview-overlay {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.preview-image {
+  display: block;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
 .controls-container {
   display: flex;
   flex-direction: column;

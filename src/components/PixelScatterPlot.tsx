@@ -11,6 +11,7 @@ interface PixelScatterPlotProps {
   showGrid?: boolean;
   showTicks?: boolean;
   autoRotate?: boolean;
+  originalImageSrc?: string | null;
 }
 
 const AxisTickLabels: React.FC = () => {
@@ -447,12 +448,22 @@ const PixelScatterPlot: React.FC<PixelScatterPlotProps> = ({
   showGrid = true,
   showTicks = true,
   autoRotate = false,
+  originalImageSrc = null,
 }) => {
   // Center of RGB color space (127.5 for each axis)
   const rgbCenter = [127.5, 127.5, 127.5] as [number, number, number];
   
   return (
-    <div style={{ width: '100%', height: '500px' }}>
+    <div style={{ width: '100%', height: '500px', position: 'relative' }}>
+      {originalImageSrc && (
+        <div className="image-preview-overlay">
+          <img 
+            src={originalImageSrc} 
+            alt="Original image preview" 
+            className="preview-image"
+          />
+        </div>
+      )}
       <Canvas
         camera={{
           position: [400, 200, 400],

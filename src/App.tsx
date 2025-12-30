@@ -14,10 +14,12 @@ function App() {
   const [showGrid, setShowGrid] = useState(true);
   const [autoRotate, setAutoRotate] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [originalImageSrc, setOriginalImageSrc] = useState<string | null>(null);
 
-  const handleImageLoad = (imageData: ImageData) => {
+  const handleImageLoad = (imageData: ImageData, imageSrc: string) => {
     const extractedPixels = extractPixelData(imageData, sampleRate);
     setPixels(extractedPixels);
+    setOriginalImageSrc(imageSrc);
     setImageLoaded(true);
   };
 
@@ -52,6 +54,7 @@ function App() {
                 showTicks={showTicks}
                 showGrid={showGrid}
                 autoRotate={autoRotate}
+                originalImageSrc={originalImageSrc}
               />
             </div>
             
@@ -60,8 +63,7 @@ function App() {
                 className="reset-btn"
                 onClick={() => {
                   setPixels([]);
-                  setImageLoaded(false);
-                  setPointSize(6);
+                  setImageLoaded(false);                  setOriginalImageSrc(null);                  setPointSize(6);
                   setSampleRate(1);
                   setShowAxes(true);
                   setShowTicks(true);

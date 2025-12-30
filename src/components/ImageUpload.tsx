@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface ImageUploadProps {
-  onImageLoad: (imageData: ImageData) => void;
+  onImageLoad: (imageData: ImageData, imageSrc: string) => void;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ onImageLoad }) => {
@@ -22,6 +22,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageLoad }) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const img = new Image();
+      const imageSrc = e.target?.result as string;
       img.onload = () => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
@@ -35,10 +36,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageLoad }) => {
 
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        onImageLoad(imageData);
+        onImageLoad(imageData, imageSrc);
         setLoading(false);
       };
-      img.src = e.target?.result as string;
+      img.src = imageSrc;
     };
     reader.readAsDataURL(file);
   };
