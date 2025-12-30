@@ -119,7 +119,7 @@ const AxisLabels: React.FC = () => {
     <>
       <Text
         ref={redTextRef}
-        position={[130, 15, 0]}
+        position={[130, 15, -15]}
         fontSize={10}
         color="white"
         anchorX="center"
@@ -129,7 +129,7 @@ const AxisLabels: React.FC = () => {
       </Text>
       <Text
         ref={greenTextRef}
-        position={[15, 130, 0]}
+        position={[15, 130, -15]}
         fontSize={10}
         color="white"
         anchorX="center"
@@ -139,7 +139,7 @@ const AxisLabels: React.FC = () => {
       </Text>
       <Text
         ref={blueTextRef}
-        position={[0, 15, 130]}        
+        position={[-15, 15, 130]}        
         fontSize={10}
         color="white"
         anchorX="center"
@@ -455,7 +455,7 @@ const PixelScatterPlot: React.FC<PixelScatterPlotProps> = ({
     <div style={{ width: '100%', height: '500px' }}>
       <Canvas
         camera={{
-          position: [400, 400, 400],
+          position: [400, 300, 400],
           fov: 50,
         }}
         style={{ background: '#111a1a' }}
