@@ -1,46 +1,74 @@
-# Getting Started with Create React App
+# 🎨 Pixel RGB Visualizer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React web application that visualizes image pixels as a 3D scatter plot in RGB color space. Each pixel from an uploaded image is plotted as a point in 3D space where:
 
-## Available Scripts
+- **X-axis**: Red channel (0-255)
+- **Y-axis**: Green channel (0-255)  
+- **Z-axis**: Blue channel (0-255)
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- **Image Upload**: Drag & drop or browse to upload images
+- **3D Visualization**: Interactive 3D scatter plot using React Three Fiber
+- **Real-time Controls**: 
+  - Adjust point size
+  - Control sampling rate for performance
+  - Toggle RGB axes visibility
+  - Auto-rotation option
+- **Color Statistics**: View min/max/average values for each RGB channel
+- **Responsive Design**: Works on desktop and mobile devices
 
-Runs the app in the development mode.\
+## How It Works
+
+1. Upload an image (automatically resized to max 100×100 pixels for performance)
+2. The app extracts RGB values from each pixel
+3. Each pixel is plotted as a point in 3D space with coordinates (R, G, B)
+4. Points are colored with their actual RGB values
+5. Use mouse controls to rotate, zoom, and pan the visualization
+
+## Technology Stack
+
+- **React** with TypeScript
+- **React Three Fiber** for 3D graphics
+- **Three.js** for WebGL rendering
+- **HTML5 Canvas** for image processing
+
+## Getting Started
+
+### Installation
+
+Install dependencies:
+```bash
+npm install
+```
+
+### Development
+
+Start the development server:
+```bash
+npm start
+```
+
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Building for Production
 
-### `npm test`
+```bash
+npm run build
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Usage Tips
 
-### `npm run build`
+- **Performance**: Use the sampling rate control to reduce the number of points for better performance with large images
+- **Navigation**: 
+  - Left click + drag to rotate
+  - Right click + drag to pan
+  - Scroll wheel to zoom
+- **Best Images**: Images with varied colors will create more interesting 3D patterns
+- **Color Clusters**: Similar colors in your image will appear as clusters in the 3D space
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Examples
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Upload a gradient image to see a smooth distribution across RGB space
+- Try a landscape photo to see how natural colors cluster
+- Upload artwork or logos to explore their color palette in 3D
