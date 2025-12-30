@@ -43,7 +43,7 @@ const VisualizationControls: React.FC<VisualizationControlsProps> = ({
         />
       </div>
 
-      <div className="control-group">
+      {/* <div className="control-group">
         <label htmlFor="sample-rate">Sample Rate: {sampleRate}</label>
         <input
           id="sample-rate"
@@ -55,7 +55,7 @@ const VisualizationControls: React.FC<VisualizationControlsProps> = ({
           onChange={(e) => onSampleRateChange(parseInt(e.target.value))}
         />
         <small>Higher values = fewer points, better performance</small>
-      </div>
+      </div> */}
 
       <div className="control-group">
         <label>
@@ -68,7 +68,7 @@ const VisualizationControls: React.FC<VisualizationControlsProps> = ({
         </label>
       </div>
 
-      <div className="control-group">
+      {/* <div className="control-group">
         <label>
           <input
             type="checkbox"
@@ -77,7 +77,7 @@ const VisualizationControls: React.FC<VisualizationControlsProps> = ({
           />
           Auto Rotate
         </label>
-      </div>
+      </div> */}
 
       {stats && (
         <div className="stats-panel">
