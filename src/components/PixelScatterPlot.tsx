@@ -106,7 +106,7 @@ const AxisLabels: React.FC = () => {
     }
     if (greenTextRef.current) {
       greenTextRef.current.lookAt(camera.position);
-      greenTextRef.current.rotation.z += Math.PI/2; // Correct upside-down orientation
+      greenTextRef.current.rotation.z -= Math.PI/2; // Correct upside-down orientation
     }
     if (blueTextRef.current) {
       blueTextRef.current.lookAt(camera.position);
@@ -127,8 +127,7 @@ const AxisLabels: React.FC = () => {
       </Text>
       <Text
         ref={greenTextRef}
-        position={[-15, 130, 0]}
-        // rotation={[Math.PI/2,0,0]}
+        position={[15, 130, 0]}
         fontSize={10}
         color="white"
         anchorX="center"
