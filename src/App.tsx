@@ -52,19 +52,7 @@ function App() {
             </div>
             
             <div className="controls-container">
-              <VisualizationControls
-                pointSize={pointSize}
-                onPointSizeChange={setPointSize}
-                sampleRate={sampleRate}
-                onSampleRateChange={handleSampleRateChange}
-                showAxes={showAxes}
-                onShowAxesChange={setShowAxes}
-                autoRotate={autoRotate}
-                onAutoRotateChange={setAutoRotate}
-                pixels={pixels}
-              />
-              
-              <button 
+<button 
                 className="reset-btn"
                 onClick={() => {
                   setPixels([]);
@@ -77,6 +65,18 @@ function App() {
               >
                 Upload New Image
               </button>
+
+              <VisualizationControls
+                pointSize={pointSize}
+                onPointSizeChange={setPointSize}
+                sampleRate={sampleRate}
+                onSampleRateChange={handleSampleRateChange}
+                showAxes={showAxes}
+                onShowAxesChange={setShowAxes}
+                autoRotate={autoRotate}
+                onAutoRotateChange={setAutoRotate}
+                pixels={pixels}
+              />
             </div>
           </div>
         )}
