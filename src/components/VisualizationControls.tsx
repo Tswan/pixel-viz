@@ -68,17 +68,6 @@ const VisualizationControls: React.FC<VisualizationControlsProps> = ({
         </label>
       </div>
 
-      {/* <div className="control-group">
-        <label>
-          <input
-            type="checkbox"
-            checked={autoRotate}
-            onChange={(e) => onAutoRotateChange(e.target.checked)}
-          />
-          Auto Rotate
-        </label>
-      </div> */}
-
       {stats && (
         <div className="stats-panel">
           <h4>Color Statistics</h4>
