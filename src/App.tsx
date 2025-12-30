@@ -7,7 +7,7 @@ import './App.css';
 
 function App() {
   const [pixels, setPixels] = useState<PixelPoint[]>([]);
-  const [pointSize, setPointSize] = useState(2);
+  const [pointSize, setPointSize] = useState(6);
   const [sampleRate, setSampleRate] = useState(1);
   const [showAxes, setShowAxes] = useState(true);
   const [autoRotate, setAutoRotate] = useState(false);
@@ -57,7 +57,7 @@ function App() {
                 onClick={() => {
                   setPixels([]);
                   setImageLoaded(false);
-                  setPointSize(2);
+                  setPointSize(6);
                   setSampleRate(1);
                   setShowAxes(true);
                   setAutoRotate(false);
