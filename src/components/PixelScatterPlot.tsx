@@ -11,6 +11,89 @@ interface PixelScatterPlotProps {
   autoRotate?: boolean;
 }
 
+const AxisTickLabels: React.FC = () => {
+  const { camera } = useThree();
+  const tickRefs = useRef<THREE.Group[]>([]);
+
+  useFrame(() => {
+    tickRefs.current.forEach((ref) => {
+      if (ref) ref.lookAt(camera.position);
+    });
+  });
+
+  const ticks = [0, 50, 100, 150, 200, 250];
+  const ticksWithoutZero = [50, 100, 150, 200, 250];
+
+  return (
+    <>
+      {/* Single origin label at (0, 0, 0) */}
+      <Text
+        ref={(ref) => {
+          if (ref) tickRefs.current[0] = ref;
+        }}
+        position={[-6, -8, -6]}
+        fontSize={6}
+        color="#ffffff"
+        anchorX="center"
+        anchorY="middle"
+      >
+        0
+      </Text>
+
+      {/* X-axis (Red) tick labels */}
+      {ticksWithoutZero.map((tick, index) => (
+        <Text
+          key={`x-${tick}`}
+          ref={(ref) => {
+            if (ref) tickRefs.current[index + 1] = ref;
+          }}
+          position={[tick, -8, -8]}
+          fontSize={6}
+          color="#fff"
+          anchorX="center"
+          anchorY="middle"
+        >
+          {tick}
+        </Text>
+      ))}
+      
+      {/* Y-axis (Green) tick labels */}
+      {ticksWithoutZero.map((tick, index) => (
+        <Text
+          key={`y-${tick}`}
+          ref={(ref) => {
+            if (ref) tickRefs.current[index + 1 + ticksWithoutZero.length] = ref;
+          }}
+          position={[-8, tick, -8]}
+          fontSize={6}
+          color="#fff"
+          anchorX="center"
+          anchorY="middle"
+        >
+          {tick}
+        </Text>
+      ))}
+      
+      {/* Z-axis (Blue) tick labels */}
+      {ticksWithoutZero.map((tick, index) => (
+        <Text
+          key={`z-${tick}`}
+          ref={(ref) => {
+            if (ref) tickRefs.current[index + 1 + (2 * ticksWithoutZero.length)] = ref;
+          }}
+          position={[-8, -8, tick]}
+          fontSize={6}
+          color="#fff"
+          anchorX="center"
+          anchorY="middle"
+        >
+          {tick}
+        </Text>
+      ))}
+    </>
+  );
+};
+
 const AxisLabels: React.FC = () => {
   const redTextRef = useRef<THREE.Group>(null);
   const greenTextRef = useRef<THREE.Group>(null);
@@ -63,6 +146,170 @@ const AxisLabels: React.FC = () => {
       >
         Blue (0-255)
       </Text>
+    </>
+  );
+};
+
+const GridLines: React.FC = () => {
+  const gridValues = [50, 100, 150, 200, 250];
+  
+  return (
+    <>
+      {/* Outer face grid lines - Bottom face (z=0) */}
+      <group key="bottom-face">
+        {gridValues.map((x) => (
+          <line key={`bottom-v-${x}`}>
+            <bufferGeometry>
+              <bufferAttribute
+                args={[new Float32Array([x, 0, 0, x, 255, 0]), 3]}
+                attach="attributes-position"
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#ffffff" transparent opacity={0.2} />
+          </line>
+        ))}
+        {gridValues.map((y) => (
+          <line key={`bottom-h-${y}`}>
+            <bufferGeometry>
+              <bufferAttribute
+                args={[new Float32Array([0, y, 0, 255, y, 0]), 3]}
+                attach="attributes-position"
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#ffffff" transparent opacity={0.2} />
+          </line>
+        ))}
+      </group>
+
+      {/* Outer face grid lines - Top face (z=255) */}
+      <group key="top-face">
+        {gridValues.map((x) => (
+          <line key={`top-v-${x}`}>
+            <bufferGeometry>
+              <bufferAttribute
+                args={[new Float32Array([x, 0, 255, x, 255, 255]), 3]}
+                attach="attributes-position"
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#ffffff" transparent opacity={0.2} />
+          </line>
+        ))}
+        {gridValues.map((y) => (
+          <line key={`top-h-${y}`}>
+            <bufferGeometry>
+              <bufferAttribute
+                args={[new Float32Array([0, y, 255, 255, y, 255]), 3]}
+                attach="attributes-position"
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#ffffff" transparent opacity={0.2} />
+          </line>
+        ))}
+      </group>
+
+      {/* Outer face grid lines - Front face (y=0) */}
+      <group key="front-face">
+        {gridValues.map((x) => (
+          <line key={`front-v-${x}`}>
+            <bufferGeometry>
+              <bufferAttribute
+                args={[new Float32Array([x, 0, 0, x, 0, 255]), 3]}
+                attach="attributes-position"
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#ffffff" transparent opacity={0.2} />
+          </line>
+        ))}
+        {gridValues.map((z) => (
+          <line key={`front-h-${z}`}>
+            <bufferGeometry>
+              <bufferAttribute
+                args={[new Float32Array([0, 0, z, 255, 0, z]), 3]}
+                attach="attributes-position"
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#ffffff" transparent opacity={0.2} />
+          </line>
+        ))}
+      </group>
+
+      {/* Outer face grid lines - Back face (y=255) */}
+      <group key="back-face">
+        {gridValues.map((x) => (
+          <line key={`back-v-${x}`}>
+            <bufferGeometry>
+              <bufferAttribute
+                args={[new Float32Array([x, 255, 0, x, 255, 255]), 3]}
+                attach="attributes-position"
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#ffffff" transparent opacity={0.2} />
+          </line>
+        ))}
+        {gridValues.map((z) => (
+          <line key={`back-h-${z}`}>
+            <bufferGeometry>
+              <bufferAttribute
+                args={[new Float32Array([0, 255, z, 255, 255, z]), 3]}
+                attach="attributes-position"
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#ffffff" transparent opacity={0.2} />
+          </line>
+        ))}
+      </group>
+
+      {/* Outer face grid lines - Left face (x=0) */}
+      <group key="left-face">
+        {gridValues.map((y) => (
+          <line key={`left-v-${y}`}>
+            <bufferGeometry>
+              <bufferAttribute
+                args={[new Float32Array([0, y, 0, 0, y, 255]), 3]}
+                attach="attributes-position"
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#ffffff" transparent opacity={0.2} />
+          </line>
+        ))}
+        {gridValues.map((z) => (
+          <line key={`left-h-${z}`}>
+            <bufferGeometry>
+              <bufferAttribute
+                args={[new Float32Array([0, 0, z, 0, 255, z]), 3]}
+                attach="attributes-position"
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#ffffff" transparent opacity={0.2} />
+          </line>
+        ))}
+      </group>
+
+      {/* Outer face grid lines - Right face (x=255) */}
+      <group key="right-face">
+        {gridValues.map((y) => (
+          <line key={`right-v-${y}`}>
+            <bufferGeometry>
+              <bufferAttribute
+                args={[new Float32Array([255, y, 0, 255, y, 255]), 3]}
+                attach="attributes-position"
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#ffffff" transparent opacity={0.2} />
+          </line>
+        ))}
+        {gridValues.map((z) => (
+          <line key={`right-h-${z}`}>
+            <bufferGeometry>
+              <bufferAttribute
+                args={[new Float32Array([255, 0, z, 255, 255, z]), 3]}
+                attach="attributes-position"
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#ffffff" transparent opacity={0.2} />
+          </line>
+        ))}
+      </group>
     </>
   );
 };
@@ -214,7 +461,9 @@ const PixelScatterPlot: React.FC<PixelScatterPlotProps> = ({
         <pointLight position={[255, 255, 255]} />
         
         {showAxes && <Axes />}
+        {showAxes && <GridLines />}
         {showAxes && <AxisLabels />}
+        {showAxes && <AxisTickLabels />}
         
         <PixelPoints 
           pixels={pixels} 
