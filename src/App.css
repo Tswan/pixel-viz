@@ -261,10 +261,11 @@
   }
   
   .controls-container {
-    order: -1;
+    order: 2;
   }
   
   .viz-container {
+    order: 1;
     height: 400px;
   }
   
