@@ -4,24 +4,24 @@ import { getColorStats, PixelPoint } from '../utils/pixelUtils';
 interface VisualizationControlsProps {
   pointSize: number;
   onPointSizeChange: (size: number) => void;
-  sampleRate: number;
-  onSampleRateChange: (rate: number) => void;
   showAxes: boolean;
   onShowAxesChange: (show: boolean) => void;
-  autoRotate: boolean;
-  onAutoRotateChange: (rotate: boolean) => void;
+  showTicks: boolean;
+  onShowTicksChange: (show: boolean) => void;
+  showGrid: boolean;
+  onShowGridChange: (show: boolean) => void;
   pixels: PixelPoint[];
 }
 
 const VisualizationControls: React.FC<VisualizationControlsProps> = ({
   pointSize,
   onPointSizeChange,
-  sampleRate,
-  onSampleRateChange,
   showAxes,
   onShowAxesChange,
-  autoRotate,
-  onAutoRotateChange,
+  showTicks,
+  onShowTicksChange,
+  showGrid,
+  onShowGridChange,
   pixels,
 }) => {
   const stats = getColorStats(pixels);
@@ -43,20 +43,6 @@ const VisualizationControls: React.FC<VisualizationControlsProps> = ({
         />
       </div>
 
-      {/* <div className="control-group">
-        <label htmlFor="sample-rate">Sample Rate: {sampleRate}</label>
-        <input
-          id="sample-rate"
-          type="range"
-          min="1"
-          max="5"
-          step="1"
-          value={sampleRate}
-          onChange={(e) => onSampleRateChange(parseInt(e.target.value))}
-        />
-        <small>Higher values = fewer points, better performance</small>
-      </div> */}
-
       <div className="control-group">
         <label>
           <input
@@ -65,6 +51,28 @@ const VisualizationControls: React.FC<VisualizationControlsProps> = ({
             onChange={(e) => onShowAxesChange(e.target.checked)}
           />
           Show RGB Axes
+        </label>
+      </div>
+
+      <div className="control-group">
+        <label>
+          <input
+            type="checkbox"
+            checked={showTicks}
+            onChange={(e) => onShowTicksChange(e.target.checked)}
+          />
+          Show RGB Ticks
+        </label>
+      </div>
+
+      <div className="control-group">
+        <label>
+          <input
+            type="checkbox"
+            checked={showGrid}
+            onChange={(e) => onShowGridChange(e.target.checked)}
+          />
+          Show Grid Axes
         </label>
       </div>
 

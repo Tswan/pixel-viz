@@ -8,6 +8,8 @@ interface PixelScatterPlotProps {
   pixels: PixelPoint[];
   pointSize?: number;
   showAxes?: boolean;
+  showGrid?: boolean;
+  showTicks?: boolean;
   autoRotate?: boolean;
 }
 
@@ -442,6 +444,8 @@ const PixelScatterPlot: React.FC<PixelScatterPlotProps> = ({
   pixels,
   pointSize = 2,
   showAxes = true,
+  showGrid = true,
+  showTicks = true,
   autoRotate = false,
 }) => {
   // Center of RGB color space (127.5 for each axis)
@@ -460,9 +464,9 @@ const PixelScatterPlot: React.FC<PixelScatterPlotProps> = ({
         <pointLight position={[255, 255, 255]} />
         
         {showAxes && <Axes />}
-        {showAxes && <GridLines />}
+        {showGrid && <GridLines />}
         {showAxes && <AxisLabels />}
-        {showAxes && <AxisTickLabels />}
+        {showTicks && <AxisTickLabels />}
         
         <PixelPoints 
           pixels={pixels} 

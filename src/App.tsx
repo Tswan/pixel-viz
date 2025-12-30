@@ -10,6 +10,8 @@ function App() {
   const [pointSize, setPointSize] = useState(6);
   const [sampleRate, setSampleRate] = useState(1);
   const [showAxes, setShowAxes] = useState(true);
+  const [showTicks, setShowTicks] = useState(true);
+  const [showGrid, setShowGrid] = useState(true);
   const [autoRotate, setAutoRotate] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -47,6 +49,8 @@ function App() {
                 pixels={pixels}
                 pointSize={pointSize}
                 showAxes={showAxes}
+                showTicks={showTicks}
+                showGrid={showGrid}
                 autoRotate={autoRotate}
               />
             </div>
@@ -60,6 +64,8 @@ function App() {
                   setPointSize(6);
                   setSampleRate(1);
                   setShowAxes(true);
+                  setShowTicks(true);
+                  setShowGrid(true);
                   setAutoRotate(false);
                 }}
               >
@@ -69,12 +75,12 @@ function App() {
               <VisualizationControls
                 pointSize={pointSize}
                 onPointSizeChange={setPointSize}
-                sampleRate={sampleRate}
-                onSampleRateChange={handleSampleRateChange}
                 showAxes={showAxes}
                 onShowAxesChange={setShowAxes}
-                autoRotate={autoRotate}
-                onAutoRotateChange={setAutoRotate}
+                showTicks={showTicks}
+                onShowTicksChange={setShowTicks}
+                showGrid={showGrid}
+                onShowGridChange={setShowGrid}
                 pixels={pixels}
               />
             </div>
