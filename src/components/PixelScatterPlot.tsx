@@ -1,5 +1,5 @@
 import React, { useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Text } from '@react-three/drei';
 import { PixelPoint } from '../utils/pixelUtils';
 import * as THREE from 'three';
@@ -12,34 +12,56 @@ interface PixelScatterPlotProps {
 }
 
 const AxisLabels: React.FC = () => {
+  const redTextRef = useRef<THREE.Group>(null);
+  const greenTextRef = useRef<THREE.Group>(null);
+  const blueTextRef = useRef<THREE.Group>(null);
+  const { camera } = useThree();
+
+  useFrame(() => {
+    if (redTextRef.current) {
+      redTextRef.current.lookAt(camera.position);
+    }
+    if (greenTextRef.current) {
+      greenTextRef.current.lookAt(camera.position);
+      greenTextRef.current.rotation.z += Math.PI/2; // Correct upside-down orientation
+    }
+    if (blueTextRef.current) {
+      blueTextRef.current.lookAt(camera.position);
+    }
+  });
+
   return (
     <>
       <Text
-        position={[130, 0, 0]}
-        fontSize={8}
-        color="red"
+        ref={redTextRef}
+        position={[130, 15, 0]}
+        fontSize={10}
+        color="white"
         anchorX="center"
         anchorY="middle"
       >
-        Red (255)
+        Red (0-255)
       </Text>
       <Text
-        position={[0, 130, 0]}
-        fontSize={8}
-        color="green"
+        ref={greenTextRef}
+        position={[-15, 130, 0]}
+        // rotation={[Math.PI/2,0,0]}
+        fontSize={10}
+        color="white"
         anchorX="center"
         anchorY="middle"
       >
-        Green (255)
+        Green (0-255)
       </Text>
       <Text
-        position={[0, 0, 130]}
-        fontSize={8}
-        color="blue"
+        ref={blueTextRef}
+        position={[0, 15, 130]}        
+        fontSize={10}
+        color="white"
         anchorX="center"
         anchorY="middle"
       >
-        Blue (255)
+        Blue (0-255)
       </Text>
     </>
   );
@@ -157,7 +179,7 @@ const PixelScatterPlot: React.FC<PixelScatterPlotProps> = ({
           position: [400, 400, 400],
           fov: 50,
         }}
-        style={{ background: '#f0f0f0' }}
+        style={{ background: '#0C1010' }}
       >
         <ambientLight intensity={0.6} />
         <pointLight position={[255, 255, 255]} />
