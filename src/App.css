@@ -231,7 +231,7 @@
 
 /* Reset Button */
 .reset-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0075FF;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
