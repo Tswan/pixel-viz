@@ -104,7 +104,7 @@ const Axes: React.FC = () => {
             attach="attributes-position"
           />
         </bufferGeometry>
-        <lineBasicMaterial color="blue" />
+        <lineBasicMaterial color="cyan" />
       </line>
     </>
   );
@@ -142,6 +142,32 @@ const PixelPoints: React.FC<{
     return { positions, colors };
   }, [pixels]);
 
+  const circleTexture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d')!;
+    canvas.width = 32;
+    canvas.height = 32;
+
+    // Clear canvas to transparent
+    context.clearRect(0, 0, 32, 32);
+    
+    // Draw circle with semi-transparent fill and solid stroke
+    context.beginPath();
+    context.arc(16, 16, 14, 0, 2 * Math.PI);
+    
+    // Semi-transparent white fill
+    context.fillStyle = 'rgba(255, 255, 255, 0.7)';
+    context.fill();
+    
+    // Solid white stroke
+    context.strokeStyle = 'rgba(255, 255, 255, 1)';
+    context.lineWidth = 2;
+    context.stroke();
+
+    const texture = new THREE.CanvasTexture(canvas);
+    return texture;
+  }, []);
+
   return (
     <points ref={meshRef}>
       <bufferGeometry>
@@ -158,6 +184,9 @@ const PixelPoints: React.FC<{
         size={pointSize}
         vertexColors
         sizeAttenuation={false}
+        map={circleTexture}
+        transparent={true}
+        alphaTest={0.1}
       />
     </points>
   );
@@ -179,7 +208,7 @@ const PixelScatterPlot: React.FC<PixelScatterPlotProps> = ({
           position: [400, 400, 400],
           fov: 50,
         }}
-        style={{ background: '#0C1010' }}
+        style={{ background: '#111a1a' }}
       >
         <ambientLight intensity={0.6} />
         <pointLight position={[255, 255, 255]} />
