@@ -455,7 +455,7 @@ const PixelScatterPlot: React.FC<PixelScatterPlotProps> = ({
     <div style={{ width: '100%', height: '500px' }}>
       <Canvas
         camera={{
-          position: [400, 300, 400],
+          position: [400, 200, 400],
           fov: 50,
         }}
         style={{ background: '#111a1a' }}
