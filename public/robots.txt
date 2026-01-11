@@ -1,3 +1,9 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemaps
+Sitemap: https://Tswan.github.io/pixel-viz/sitemap.xml
+
+# Crawl-delay to be respectful
+Crawl-delay: 1
