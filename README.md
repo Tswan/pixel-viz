@@ -6,6 +6,8 @@ A React web application that visualizes image pixels as a 3D scatter plot in RGB
 - **Y-axis**: Green channel (0-255)  
 - **Z-axis**: Blue channel (0-255)
 
+Visit https://tswan.github.io/pixel-viz/ to make your own scatter plot your images.
+
 ## Features
 
 - **Image Upload**: Drag & drop or browse to upload images
