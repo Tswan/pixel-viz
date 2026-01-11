@@ -35,7 +35,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>🎨 Pixel RGB Visualizer</h1>
+        <h1>🎨 Pixel Visualizer</h1>
         <p>Upload an image to visualize its pixels in 3D RGB color space</p>
       </header>
       
