@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ImageUpload from './components/ImageUpload';
 import PixelScatterPlot from './components/PixelScatterPlot';
 import VisualizationControls from './components/VisualizationControls';
@@ -15,8 +15,49 @@ function App() {
   const [autoRotate, setAutoRotate] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [originalImageSrc, setOriginalImageSrc] = useState<string | null>(null);
+  const [originalImageData, setOriginalImageData] = useState<ImageData | null>(null);
+
+  // Load default image on app start
+  useEffect(() => {
+    loadDefaultImage();
+  }, []);
+
+  // Re-extract pixels when sample rate changes
+  useEffect(() => {
+    if (originalImageData) {
+      const extractedPixels = extractPixelData(originalImageData, sampleRate);
+      setPixels(extractedPixels);
+    }
+  }, [sampleRate, originalImageData]);
+
+  const loadDefaultImage = () => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      // Limit image size to prevent performance issues
+      const maxSize = 100;
+      const scale = Math.min(maxSize / img.width, maxSize / img.height);
+      canvas.width = Math.floor(img.width * scale);
+      canvas.height = Math.floor(img.height * scale);
+
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      
+      setOriginalImageData(imageData);
+      setOriginalImageSrc('/pixel-viz/default-image.jpg');
+      const extractedPixels = extractPixelData(imageData, sampleRate);
+      setPixels(extractedPixels);
+      setImageLoaded(true);
+    };
+    img.crossOrigin = 'anonymous';
+    img.src = '/pixel-viz/default-image.jpg';
+  };
 
   const handleImageLoad = (imageData: ImageData, imageSrc: string) => {
+    setOriginalImageData(imageData);
     const extractedPixels = extractPixelData(imageData, sampleRate);
     setPixels(extractedPixels);
     setOriginalImageSrc(imageSrc);
@@ -25,11 +66,6 @@ function App() {
 
   const handleSampleRateChange = (newSampleRate: number) => {
     setSampleRate(newSampleRate);
-    // Re-extract pixels if we have image data
-    if (imageLoaded && pixels.length > 0) {
-      // Note: In a real app, you'd store the original ImageData and re-extract
-      // For now, we'll just update the sample rate for future uploads
-    }
   };
 
   return (
@@ -40,13 +76,9 @@ function App() {
       </header>
       
       <main className="App-main">
-        {!imageLoaded ? (
-          <div className="upload-section">
-            <ImageUpload onImageLoad={handleImageLoad} />
-          </div>
-        ) : (
-          <div className="visualization-section">
-            <div className="viz-container">
+        <div className="visualization-section">
+          <div className="viz-container">
+            {imageLoaded ? (
               <PixelScatterPlot
                 pixels={pixels}
                 pointSize={pointSize}
@@ -56,24 +88,19 @@ function App() {
                 autoRotate={autoRotate}
                 originalImageSrc={originalImageSrc}
               />
+            ) : (
+              <div className="placeholder-viz">
+                <p>Upload an image to see the 3D RGB visualization</p>
+              </div>
+            )}
+          </div>
+          
+          <div className="controls-container">
+            <div className="upload-section">
+              <ImageUpload onImageLoad={handleImageLoad} />
             </div>
-            
-            <div className="controls-container">
-<button 
-                className="reset-btn"
-                onClick={() => {
-                  setPixels([]);
-                  setImageLoaded(false);                  setOriginalImageSrc(null);                  setPointSize(6);
-                  setSampleRate(1);
-                  setShowAxes(true);
-                  setShowTicks(true);
-                  setShowGrid(true);
-                  setAutoRotate(false);
-                }}
-              >
-                Upload New Image
-              </button>
 
+            {imageLoaded && (
               <VisualizationControls
                 pointSize={pointSize}
                 onPointSizeChange={setPointSize}
@@ -85,9 +112,9 @@ function App() {
                 onShowGridChange={setShowGrid}
                 pixels={pixels}
               />
-            </div>
+            )}
           </div>
-        )}
+        </div>
       </main>
     </div>
   );
