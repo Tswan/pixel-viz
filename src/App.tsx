@@ -76,7 +76,6 @@ function App() {
       </header>
       
       <main className="App-main">
-        <div className="visualization-section">
           <div className="viz-container">
             {imageLoaded ? (
               <PixelScatterPlot
@@ -114,7 +113,6 @@ function App() {
               />
             )}
           </div>
-        </div>
       </main>
     </div>
   );

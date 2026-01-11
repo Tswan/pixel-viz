@@ -454,7 +454,7 @@ const PixelScatterPlot: React.FC<PixelScatterPlotProps> = ({
   const rgbCenter = [127.5, 127.5, 127.5] as [number, number, number];
   
   return (
-    <div style={{ width: '100%', height: '500px', position: 'relative' }}>
+    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       {originalImageSrc && (
         <div className="image-preview-overlay">
           <img 
