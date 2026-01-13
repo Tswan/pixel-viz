@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import ImageUpload from './components/ImageUpload';
 import PixelScatterPlot from './components/PixelScatterPlot';
 import VisualizationControls from './components/VisualizationControls';
+import ImageGallery from './components/ImageGallery';
 import { extractPixelData, PixelPoint } from './utils/pixelUtils';
+import { storeImageData, getImageData } from './utils/imageStore';
 import './App.css';
 
 function App() {
@@ -16,10 +18,20 @@ function App() {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [originalImageSrc, setOriginalImageSrc] = useState<string | null>(null);
   const [originalImageData, setOriginalImageData] = useState<ImageData | null>(null);
+  const [currentImageId, setCurrentImageId] = useState<string | null>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
-  // Load default image on app start
+  // Check for URL parameter on load
   useEffect(() => {
-    loadDefaultImage();
+    const urlParams = new URLSearchParams(window.location.search);
+    const imageId = urlParams.get('img');
+    
+    if (imageId) {
+      loadImageById(imageId);
+    } else {
+      loadDefaultImage();
+    }
   }, []);
 
   // Re-extract pixels when sample rate changes
@@ -29,6 +41,26 @@ function App() {
       setPixels(extractedPixels);
     }
   }, [sampleRate, originalImageData]);
+
+  const loadImageById = async (imageId: string) => {
+    try {
+      const storedData = await getImageData(imageId);
+      if (storedData) {
+        setOriginalImageData(storedData.imageData);
+        setOriginalImageSrc(storedData.imageSrc);
+        setCurrentImageId(imageId);
+        const extractedPixels = extractPixelData(storedData.imageData, sampleRate);
+        setPixels(extractedPixels);
+        setImageLoaded(true);
+      } else {
+        console.log('Image not found, loading default');
+        loadDefaultImage();
+      }
+    } catch (error) {
+      console.error('Failed to load image:', error);
+      loadDefaultImage();
+    }
+  };
 
   const loadDefaultImage = () => {
     const img = new Image();
@@ -48,6 +80,7 @@ function App() {
       
       setOriginalImageData(imageData);
       setOriginalImageSrc('/pixel-viz/default-image.jpg');
+      setCurrentImageId(null);
       const extractedPixels = extractPixelData(imageData, sampleRate);
       setPixels(extractedPixels);
       setImageLoaded(true);
@@ -56,16 +89,47 @@ function App() {
     img.src = '/pixel-viz/default-image.jpg';
   };
 
-  const handleImageLoad = (imageData: ImageData, imageSrc: string) => {
+  const handleImageLoad = async (imageData: ImageData, imageSrc: string) => {
+    const imageId = Date.now().toString();
+    
+    // Store the image data
+    await storeImageData(imageId, imageData, imageSrc);
+    
+    // Update URL without page reload
+    const newUrl = `${window.location.origin}${window.location.pathname}?img=${imageId}`;
+    window.history.pushState({ imageId }, '', newUrl);
+    
     setOriginalImageData(imageData);
+    setCurrentImageId(imageId);
     const extractedPixels = extractPixelData(imageData, sampleRate);
     setPixels(extractedPixels);
     setOriginalImageSrc(imageSrc);
     setImageLoaded(true);
+    
+    // Show toast with share URL
+    setToastMessage(`Share URL: ${newUrl}`);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 4000);
   };
 
   const handleSampleRateChange = (newSampleRate: number) => {
     setSampleRate(newSampleRate);
+  };
+
+  const handleImageSelect = (imageId: string) => {
+    const newUrl = `${window.location.origin}${window.location.pathname}?img=${imageId}`;
+    window.history.pushState({ imageId }, '', newUrl);
+    loadImageById(imageId);
+  };
+
+  const handleNewImage = () => {
+    const newUrl = `${window.location.origin}${window.location.pathname}`;
+    window.history.pushState({}, '', newUrl);
+    setCurrentImageId(null);
+    setImageLoaded(false);
+    setOriginalImageSrc(null);
+    setOriginalImageData(null);
+    setPixels([]);
   };
 
   return (
@@ -112,8 +176,17 @@ function App() {
                 pixels={pixels}
               />
             )}
+            
+            {/* <ImageGallery onImageSelect={handleImageSelect} /> */}
           </div>
       </main>
+      
+      {showToast && (
+        <div className="toast">
+          <span>{toastMessage}</span>
+          <button onClick={() => setShowToast(false)}>×</button>
+        </div>
+      )}
     </div>
   );
 }
