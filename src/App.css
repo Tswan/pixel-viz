@@ -4,6 +4,13 @@
   min-height: 100vh;
   background: #1e293b;
   color: #333;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .App-header {
@@ -369,29 +376,171 @@
   color: white;
 }
 
+.mobile-controls-toggle {
+  position: fixed;
+  top: calc(20px + env(safe-area-inset-top));
+  right: 10px;
+  z-index: 1001;
+  background: rgba(30, 41, 59, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-controls-toggle:hover {
+  transform: scale(1.1);
+  background: rgba(30, 41, 59, 1);
+}
+
+.mobile-controls-toggle:active {
+  transform: scale(0.95);
+}
+/* */
+.App.mobile {
+  overflow: hidden;
+  height: 100vh;
+  height: 100dvh;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.App.mobile .App-header {
+  padding: calc(1rem + env(safe-area-inset-top)) 1rem 1rem 1rem;
+  background: linear-gradient(to bottom, rgba(30, 41, 59, 0.95), rgba(30, 41, 59, 0.8), transparent);
+}
+
+.App.mobile .App-header h1 {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.App.mobile .App-header p {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.App.mobile .controls-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border-radius: 20px 0 0 20px;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+  padding: 1rem;
+  z-index: 1000;
+}
+
+.App.mobile .controls-container.open {
+  transform: translateX(0);
+}
+
+.App.mobile .controls-container.closed {
+  transform: translateX(100%);
+}
+
 /* Responsive Design */
-@media (max-width: 768px) {
-  .App-header h1 {
-    font-size: 2rem;
-  }
-  
-  .visualization-section {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    padding: 1rem;
-  }
-  
-  .controls-container {
-    order: 2;
+@media (max-width: 910px) {
+  .App-main {
+    height: 100vh;
+    height: 100dvh;
   }
   
   .viz-container {
-    order: 1;
-    /* height: 400px; */
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+  }
+  
+  .placeholder-viz {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 1rem;
+    color: #64748b;
+    font-size: 1.1rem;
+    z-index: 2;
   }
   
   .stats-grid {
     grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .info-panel {
+    margin-top: 1rem;
+  }
+  
+  .info-panel ul {
+    padding-left: 1rem;
+  }
+  
+  .info-panel li {
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 480px) {
+  .App.mobile .controls-container {
+    max-width: 100%;
+    border-radius: 20px 20px 0 0;
+    bottom: 0;
+    top: auto;
+    height: 80vh;
+    transform: translateY(100%);
+  }
+  
+  .App.mobile .controls-container.open {
+    transform: translateY(0);
+  }
+  
+  .App.mobile .controls-container.closed {
+    transform: translateY(100%);
+  }
+  
+  .mobile-controls-toggle {
+    bottom: 10px;
+    top: auto;
+  }
+}
+
+/* Performance optimizations for mobile */
+@media (max-width: 768px) {
+  .viz-container {
+    will-change: transform;
+  }
+  
+  /* Reduce motion on mobile if preferred */
+  @media (prefers-reduced-motion: reduce) {
+    .controls-container {
+      transition: none;
+    }
+    
+    .mobile-controls-toggle {
+      transition: none;
+    }
   }
 }
 
@@ -415,9 +564,25 @@
   animation: slideUp 0.3s ease-out;
 }
 
+@media (max-width: 480px) {
+  .toast {
+    bottom: 80px; /* Move above mobile controls button */
+    left: 10px;
+    right: 10px;
+    max-width: calc(100% - 20px);
+    transform: none;
+    font-size: 13px;
+    padding: 10px 16px;
+  }
+}
+
 .toast span {
   word-break: break-all;
   flex: 1;
+  user-select: text; /* Allow text selection in toast */
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
 }
 
 .toast button {
@@ -432,9 +597,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
 }
 
-.toast button:hover {
+.toast button:hover,
+.toast button:active {
   color: white;
 }
 

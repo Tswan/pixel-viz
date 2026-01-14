@@ -12,6 +12,7 @@ interface PixelScatterPlotProps {
   showTicks?: boolean;
   autoRotate?: boolean;
   originalImageSrc?: string | null;
+  isMobile?: boolean;
 }
 
 const AxisTickLabels: React.FC = () => {
@@ -449,13 +450,30 @@ const PixelScatterPlot: React.FC<PixelScatterPlotProps> = ({
   showTicks = true,
   autoRotate = false,
   originalImageSrc = null,
+  isMobile = false,
 }) => {
   // Center of RGB color space (127.5 for each axis)
   const rgbCenter = [127.5, 127.5, 127.5] as [number, number, number];
   
+  // Mobile-optimized camera settings
+  const cameraConfig = isMobile 
+    ? {
+        position: [300, 150, 300] as [number, number, number],
+        fov: 60,
+      }
+    : {
+        position: [400, 200, 400] as [number, number, number],
+        fov: 50,
+      };
+  
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-      {originalImageSrc && (
+    <div style={{ 
+      width: '100%', 
+      height: '100%', 
+      position: 'relative',
+      touchAction: 'none', // Prevent default touch behaviors for better 3D interaction
+    }}>
+      {originalImageSrc &&  ( 
         <div className="image-preview-overlay">
           <img 
             src={originalImageSrc} 
@@ -465,11 +483,12 @@ const PixelScatterPlot: React.FC<PixelScatterPlotProps> = ({
         </div>
       )}
       <Canvas
-        camera={{
-          position: [400, 200, 400],
-          fov: 50,
-        }}
+        camera={cameraConfig}
         style={{ background: '#111a1a' }}
+        gl={{ 
+          antialias: !isMobile, // Disable antialiasing on mobile for better performance
+          powerPreference: isMobile ? 'low-power' : 'high-performance',
+        }}
       >
         <ambientLight intensity={0.6} />
         <pointLight position={[255, 255, 255]} />
@@ -488,6 +507,15 @@ const PixelScatterPlot: React.FC<PixelScatterPlotProps> = ({
         <OrbitControls 
           enableDamping 
           target={rgbCenter}
+          enableZoom={true}
+          enablePan={true}
+          enableRotate={true}
+          zoomSpeed={isMobile ? 0.5 : 1}
+          rotateSpeed={isMobile ? 0.5 : 1}
+          panSpeed={isMobile ? 0.5 : 1}
+          maxPolarAngle={Math.PI}
+          minDistance={100}
+          maxDistance={800}
         />
       </Canvas>
     </div>

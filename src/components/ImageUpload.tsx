@@ -29,14 +29,17 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageLoad }) => {
         if (!ctx) return;
 
         // Limit image size to prevent performance issues
-        const maxSize = 100;
+        const maxSize = 154;
         const scale = Math.min(maxSize / img.width, maxSize / img.height);
         canvas.width = Math.floor(img.width * scale);
         canvas.height = Math.floor(img.height * scale);
 
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        onImageLoad(imageData, imageSrc);
+        
+        // Generate a smaller image URL from the resized canvas instead of using the original
+        const resizedImageSrc = canvas.toDataURL('image/jpeg', 0.8);
+        onImageLoad(imageData, resizedImageSrc);
         setLoading(false);
       };
       img.src = imageSrc;
@@ -88,7 +91,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageLoad }) => {
               style={{ display: 'none' }}
             />
             <div className="upload-note">
-              Image will be resized to max 100x100 pixels for performance
+              Image will be resized to max 100x100 pixels for visualization and storage
             </div>
           </>
         )}

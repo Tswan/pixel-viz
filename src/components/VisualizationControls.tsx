@@ -11,6 +11,7 @@ interface VisualizationControlsProps {
   showGrid: boolean;
   onShowGridChange: (show: boolean) => void;
   pixels: PixelPoint[];
+  isMobile?: boolean;
 }
 
 const VisualizationControls: React.FC<VisualizationControlsProps> = ({
@@ -23,6 +24,7 @@ const VisualizationControls: React.FC<VisualizationControlsProps> = ({
   showGrid,
   onShowGridChange,
   pixels,
+  isMobile = false,
 }) => {
   const stats = getColorStats(pixels);
 
@@ -113,11 +115,16 @@ const VisualizationControls: React.FC<VisualizationControlsProps> = ({
         <ul>
           <li>Upload an image to see its pixels plotted in RGB space</li>
           <li>Each point represents one pixel with RGB coordinates</li>
-          <li>Red axis (X) = Red channel (0-255)</li>
-          <li>Green axis (Y) = Green channel (0-255)</li>
-          <li>Blue axis (Z) = Blue channel (0-255)</li>
-          <li>Point color matches the actual pixel color</li>
-          <li>Use mouse to rotate, zoom, and pan the view</li>
+          {!isMobile && (
+            <>
+              <li>Red axis (X) = Red channel (0-255)</li>
+              <li>Green axis (Y) = Green channel (0-255)</li>
+              <li>Blue axis (Z) = Blue channel (0-255)</li>
+              <li>Point color matches the actual pixel color</li>
+            </>
+          )}
+          <li>Use {isMobile ? 'touch gestures' : 'mouse'} to rotate, zoom, and pan the view</li>
+          {isMobile && <li>Tap the gear icon to access controls</li>}
         </ul>
       </div>
     </div>
