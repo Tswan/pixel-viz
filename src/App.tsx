@@ -45,10 +45,15 @@ function App() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const imageId = urlParams.get('img');
+    console.log('App: Current URL:', window.location.href);
+    console.log('App: URL search params:', window.location.search);
+    console.log('App: Parsed image ID from URL:', imageId);
     
     if (imageId) {
+      console.log('App: Loading image by ID:', imageId);
       loadImageById(imageId);
     } else {
+      console.log('App: No image ID in URL, loading default');
       loadDefaultImage();
     }
   }, []);
