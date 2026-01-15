@@ -39,21 +39,17 @@ function App() {
   const [currentImageId, setCurrentImageId] = useState<string | null>(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
-  const [isControlsOpen, setIsControlsOpen] = useState(!isMobile); // Collapsed by default on mobile
+  const [isControlsOpen, setIsControlsOpen] = useState(isMobile); // Collapsed by default on mobile
 
   // Check for URL parameter on load
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const imageId = urlParams.get('img');
-    console.log('App: Current URL:', window.location.href);
-    console.log('App: URL search params:', window.location.search);
-    console.log('App: Parsed image ID from URL:', imageId);
     
     if (imageId) {
-      console.log('App: Loading image by ID:', imageId);
       loadImageById(imageId);
     } else {
-      console.log('App: No image ID in URL, loading default');
+      console.warn('App: No image ID in URL, loading default');
       loadDefaultImage();
     }
   }, []);
@@ -77,7 +73,7 @@ function App() {
         setPixels(extractedPixels);
         setImageLoaded(true);
       } else {
-        console.log('Image not found, loading default');
+        console.warn('Image not found, loading default');
         loadDefaultImage();
       }
     } catch (error) {
